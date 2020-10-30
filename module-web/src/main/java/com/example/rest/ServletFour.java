@@ -2,7 +2,6 @@ package com.example.rest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.concurrent.Future;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -13,10 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.example.service.AsyncEjbTaskExecutor;
-//http://localhost:8080/ServletThree
-@WebServlet("/ServletThree")
-public class ServletThree extends HttpServlet {
+import com.example.service.ExampleService;
+
+@WebServlet("/ServletFour")
+public class ServletFour extends HttpServlet {
 	/**
 	 * 
 	 * 
@@ -33,7 +32,7 @@ public class ServletThree extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private AsyncEjbTaskExecutor asyncEjbTaskExecutor;
+	private ExampleService exampleService;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
@@ -42,26 +41,25 @@ public class ServletThree extends HttpServlet {
 		response.setDateHeader("Expires", 1); // prevents caching at the proxy
 												// server
 		response.setContentType("text/html");
+
 		final PrintWriter writer = response.getWriter();
+
 		try {
 
 			final Context context;
 			try {
 				context = new InitialContext();
-				asyncEjbTaskExecutor = (AsyncEjbTaskExecutor) context.lookup(
-						"java:global/module-ear-1.0-SNAPSHOT/module-ejb-1.0-SNAPSHOT/AsyncEjbTaskExecutor!com.example.service.AsyncEjbTaskExecutor");
-
+				exampleService = (ExampleService) context.lookup(
+						"java:global/module-ear-1.0-SNAPSHOT/module-ejb-1.0-SNAPSHOT/ExampleService!com.example.service.ExampleService");
+				
 			} catch (NamingException e) {
-				throw new RuntimeException();
+				throw new RuntimeException(e);
 			}
 
-			Future<Boolean> execute = asyncEjbTaskExecutor.execute();
-			while (!execute.isDone()) {
-				System.out.println("Working...");
-			}
+			final PrintWriter out = response.getWriter();
+			out.println(exampleService.transactionalMethod());
 
-			writer.println("<h2> ServletThree </h2>");
-			writer.println(execute.get());
+			writer.println("<h2> ServletFour </h2>");
 
 		} catch (Throwable ex) {
 

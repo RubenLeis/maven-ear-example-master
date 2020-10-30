@@ -53,7 +53,7 @@ public class ServletTwo extends HttpServlet {
 						"java:global/module-ear-1.0-SNAPSHOT/module-ejb-1.0-SNAPSHOT/ExampleService!com.example.service.ExampleService");
 
 			} catch (NamingException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 
 			final PrintWriter out = response.getWriter();
