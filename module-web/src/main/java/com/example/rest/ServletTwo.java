@@ -56,8 +56,7 @@ public class ServletTwo extends HttpServlet {
 				throw new RuntimeException(e);
 			}
 
-			final PrintWriter out = response.getWriter();
-			out.println(exampleService.whoAmI());
+			writer.println(exampleService.whoAmI());
 
 			writer.println("<h2> ServletTwo </h2>");
 

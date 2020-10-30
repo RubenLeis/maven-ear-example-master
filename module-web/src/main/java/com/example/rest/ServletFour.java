@@ -55,9 +55,7 @@ public class ServletFour extends HttpServlet {
 			} catch (NamingException e) {
 				throw new RuntimeException(e);
 			}
-
-			final PrintWriter out = response.getWriter();
-			out.println(exampleService.transactionalMethod());
+			writer.println(exampleService.transactionalMethod());
 
 			writer.println("<h2> ServletFour </h2>");
 
